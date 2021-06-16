@@ -24,6 +24,7 @@ app.get('/', (req, res) => {
     res.render('home')
 })
 
+//Test path
 app.get('/makecampground', async (req, res) => {
     let camp = new Campground({title: "My Backyard"})
     await camp.save();
