@@ -16,6 +16,7 @@ db.once("open", () => {
 
 // THE FOLLOWING FUNCTION DELETES THE DATABASE!!
 
+
 const seedDb = async () => {
     await Campground.deleteMany({});
     for(let i = 0; i < 50; i++) {
