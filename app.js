@@ -4,6 +4,7 @@ const app = express();
 const port = 3000;
 const path = require('path');
 const Campground = require('./models/campground');
+const methodOverride = require('method-override');
 
 mongoose.connect('mongodb://localhost:/yelpCamp', {
     useNewUrlParser: true,
@@ -21,6 +22,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({extended: true}));
+app.use(methodOverride('_method'));
 
 app.get('/', (req, res) => {
     res.render('home')
@@ -44,6 +46,24 @@ app.post('/campgrounds', async (req, res) => {
 app.get('/campgrounds/:id', async (req, res) => {
     const camp = await Campground.findById(req.params.id);
     res.render('campgrounds/show', {camp})
+})
+
+app.get('/campgrounds/:id/edit', async (req, res) => {
+    const camp = await Campground.findById(req.params.id);
+    res.render('campgrounds/edit', {camp})
+})
+
+app.put('/campgrounds/:id', async (req, res) => {
+    const { id } = req.params;
+    //This is campground because name on the form are campground[value]
+    const camp = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {new: true});
+    res.redirect(`/campgrounds/${camp._id}`);
+})
+
+app.delete('/campgrounds/:id', async (req, res) => {
+    const { id } = req.params;
+    await Campground.findByIdAndDelete(id);
+    res.redirect('/campgrounds')
 })
 
 //Test path
