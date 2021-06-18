@@ -5,6 +5,8 @@ const port = 3000;
 const path = require('path');
 const Campground = require('./models/campground');
 const methodOverride = require('method-override');
+//Learning middleware
+const morgan = require('morgan');
 
 mongoose.connect('mongodb://localhost:/yelpCamp', {
     useNewUrlParser: true,
@@ -20,6 +22,7 @@ db.once("open", () => {
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(morgan('tiny'));
 
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
