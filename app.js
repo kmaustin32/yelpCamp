@@ -27,6 +27,11 @@ app.use(morgan('tiny'));
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 
+app.use((req, res, next) => {
+    req.requestTime = Date.now();
+    next();
+});
+
 app.get('/', (req, res) => {
     res.render('home')
 })
@@ -76,6 +81,12 @@ app.get('/makecampground', async (req, res) => {
     res.send(camp);
 })
 
+app.use((req, res) => {
+    res.status(404).send("Error: Page Not Found");
+});
+
 app.listen(port, () => {
     console.log(`Listening on Port ${port}`);
 });
+
+//You can pass a callback function in a get request before (res, req) provided that the callback contains next (req, res, next), and calls next();
