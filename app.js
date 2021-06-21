@@ -5,6 +5,7 @@ const port = 3000;
 const path = require('path');
 const Campground = require('./models/campground');
 const methodOverride = require('method-override');
+const ejsMate = require('ejs-mate');
 //Learning middleware
 const morgan = require('morgan');
 
@@ -20,6 +21,7 @@ db.once("open", () => {
     console.log("Database Connected");
 });
 
+app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(morgan('tiny'));
