@@ -14,8 +14,8 @@
                 </ul>
                 <div class="card-body">
                     <a href="/campgrounds" class="card-link btn btn-secondary">All Campgrounds</a>
-                    <a href="/campgrounds/<%= camp._id %>/edit " class="card-link btn btn-info">Edit Campground</a>
-                    <form class="d-inline" action="/campgrounds/<%= camp._id %>?_method=DELETE" method="POST">
+                    <a href="/campgrounds/<%= camp._id %>/edit " class="card-link btn btn-info" style="color: white;">Edit Campground</a>
+                    <form class="d-inline card-link" action="/campgrounds/<%= camp._id %>?_method=DELETE" method="POST">
                         <button class="btn btn-danger">Delete</button>
                     </form>
                 </div>
