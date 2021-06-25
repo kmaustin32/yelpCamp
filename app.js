@@ -6,6 +6,7 @@ const path = require('path');
 const Campground = require('./models/campground');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
+const catchAsync = require('./utils/catchAsync');
 //Learning middleware
 const morgan = require('morgan');
 
@@ -38,54 +39,54 @@ app.get('/', (req, res) => {
     res.render('home')
 })
 
-app.get('/campgrounds', async (req, res) => {
+app.get('/campgrounds', catchAsync(async (req, res, next) => {
     const campgrounds = await Campground.find({});
     res.render('campgrounds/index', {campgrounds});
-})
+}))
 
 app.get('/campgrounds/new', (req, res) => {
     res.render('campgrounds/new')
 })
 
-app.post('/campgrounds', async (req, res) => {
+app.post('/campgrounds', catchAsync(async (req, res, next) => {
     let camp = new Campground(req.body.campground);
     await camp.save();
     res.redirect(`/campgrounds/${camp._id}`);
-})
+}))
 
-app.get('/campgrounds/:id', async (req, res) => {
+app.get('/campgrounds/:id', catchAsync(async (req, res, next) => {
     const camp = await Campground.findById(req.params.id);
     res.render('campgrounds/show', {camp})
-})
+}))
 
-app.get('/campgrounds/:id/edit', async (req, res) => {
+app.get('/campgrounds/:id/edit', catchAsync(async (req, res, next) => {
     const camp = await Campground.findById(req.params.id);
     res.render('campgrounds/edit', {camp})
-})
+}))
 
-app.put('/campgrounds/:id', async (req, res) => {
+app.put('/campgrounds/:id', catchAsync(async (req, res, next) => {
     const { id } = req.params;
     //This is campground because name on the form are campground[value]
     const camp = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {new: true});
     res.redirect(`/campgrounds/${camp._id}`);
-})
+}))
 
-app.delete('/campgrounds/:id', async (req, res) => {
+app.delete('/campgrounds/:id', catchAsync(async (req, res, next) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     res.redirect('/campgrounds')
-})
+}))
 
 //Test path
-app.get('/makecampground', async (req, res) => {
+app.get('/makecampground', catchAsync(async (req, res, next) => {
     let camp = new Campground({title: "My Backyard"})
     await camp.save();
     res.send(camp);
-})
+}))
 
-app.use((req, res) => {
-    res.status(404).send("Error: Page Not Found");
-});
+app.use((err, req, res, next) => {
+    res.send("oh boy, something went wrong")
+})
 
 app.listen(port, () => {
     console.log(`Listening on Port ${port}`);
