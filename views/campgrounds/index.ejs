@@ -1,26 +1,28 @@
 <% layout('layouts/boilerplate') %> 
-<h1 class="text-center mb-3">All Campgrounds</h1>
-<div class="mb-4 d-grid gap-2 col-4 mx-auto">
-    <a href="/campgrounds/new" class="btn btn-secondary" >Add Campground</a>
+<div class="card mb-3">
+    <h1 class="text-center mb-3">All Campgrounds</h1>
+    <div class="mb-4 d-grid gap-2 col-4 mx-auto">
+        <a href="/campgrounds/new" class="btn btn-secondary" >Add Campground</a>
+    </div>
 </div>
-<ul>
-    <% for (let camp of campgrounds) { %> 
-        <div class="card mb-3">
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="<%= camp.image %>" alt="" class="img-fluid">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h1 class="card-title"><%= camp.title %></h1>
-                        <p class="card-text"><%= camp.description %></p>
-                        <p class="card-text">
-                            <small class="text-muted"><%= camp.location %></small>
-                        </p>
-                        <a href="/campgrounds/<%= camp._id %>" class="btn btn-primary">View <%= camp.title %></a>
-                    </div>
+
+<% for (let camp of campgrounds) { %> 
+    <div class="card mb-3">
+        <div class="row">
+            <div class="col-4">
+                <img src="<%= camp.image %>" alt="" class="img-fluid img-thumbnail" style="height: 350px; width: 350px">
+            </div>
+            <div class="col-8">
+                <div class="card-body">
+                    <h1 class="card-title"><%= camp.title %></h1>
+                    <p class="card-text"><%= camp.description %></p>
+                    <p class="card-text">
+                        <small class="text-muted"><%= camp.location %></small>
+                    </p>
+                    <a href="/campgrounds/<%= camp._id %>" class="btn btn-primary">View <%= camp.title %></a>
                 </div>
             </div>
         </div>
-    <% } %> 
-</ul>
+    </div>
+<% } %> 
+
