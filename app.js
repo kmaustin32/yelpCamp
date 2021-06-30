@@ -93,13 +93,6 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res, next) => {
     res.redirect('/campgrounds')
 }))
 
-//Test path
-app.get('/makecampground', catchAsync(async (req, res, next) => {
-    let camp = new Campground({title: "My Backyard"})
-    await camp.save();
-    res.send(camp);
-}))
-
 app.all('*', (req, res, next) => {
     next(new ExpressError("Page not found", '404'))
 })
