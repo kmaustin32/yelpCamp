@@ -4,7 +4,8 @@ const app = express();
 const port = 3000;
 const path = require('path');
 const Campground = require('./models/campground');
-const {campgroundSchema} = require('./schemas');
+const Review = require('./models/review')
+const {campgroundSchema, reviewSchema} = require('./schemas');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const Joi = require('joi');
@@ -25,8 +26,21 @@ db.once("open", () => {
     console.log("Database Connected");
 });
 
+//Joi Validators
+
 const validateCampground = (req, res, next) => {
     let { error } = campgroundSchema.validate(req.body);
+
+    if(error) {
+        let message = error.details.map(el => el.message).join(',');
+        throw new ExpressError(message, '400');
+    } else {
+        next();
+    }
+}
+
+const validateReview = (req, res, next) => {
+    let {error} = reviewSchema.validate(req.body);
 
     if(error) {
         let message = error.details.map(el => el.message).join(',');
@@ -91,6 +105,15 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res, next) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     res.redirect('/campgrounds')
+}))
+
+app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res, next) => {
+    const campground = await Campground.findById(req.params.id);
+    const review = new Review(req.body.review);
+    campground.reviews.push(review);
+    await review.save();
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`)
 }))
 
 app.all('*', (req, res, next) => {
