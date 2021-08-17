@@ -19,7 +19,7 @@ db.once("open", () => {
 
 const seedDb = async () => {
     await Campground.deleteMany({});
-    for(let i = 0; i < 30; i++) {
+    for(let i = 0; i < 20; i++) {
         let random1000 = Math.floor(Math.random() * 1000);
         let price = Math.floor(Math.random() * 20) + 10;
         let camp = new Campground({
