@@ -5,6 +5,7 @@ const ExpressError = require('../utils/ExpressErrors');
 const Campground = require('../models/campground');
 const Review = require('../models/review');
 const {campgroundSchema} = require('../schemas');
+const {isLoggedIn} = require('../middleware');
 
 //Joi Validation
 const validateCampground = (req, res, next) => {
@@ -24,11 +25,11 @@ router.get('/', catchAsync(async (req, res, next) => {
     res.render('campgrounds/index', {campgrounds});
 }))
 
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
     res.render('campgrounds/new')
 })
 
-router.post('/', validateCampground, catchAsync(async (req, res, next) => {
+router.post('/', isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
     // if (!req.body.campground) throw new ExpressError("Invalid Campground Data", "400");
 
     let camp = new Campground(req.body.campground);
@@ -46,12 +47,12 @@ router.get('/:id', catchAsync(async (req, res, next) => {
     res.render('campgrounds/show', {camp})
 }))
 
-router.get('/:id/edit', catchAsync(async (req, res, next) => {
+router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res, next) => {
     const camp = await Campground.findById(req.params.id);
     res.render('campgrounds/edit', {camp})
 }))
 
-router.put('/:id', validateCampground, catchAsync(async (req, res, next) => {
+router.put('/:id', isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
     const { id } = req.params;
     //This is campground because name on the form are campground[value]
     const camp = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {new: true});
@@ -59,7 +60,7 @@ router.put('/:id', validateCampground, catchAsync(async (req, res, next) => {
     res.redirect(`/campgrounds/${camp._id}`);
 }))
 
-router.delete('/:id', catchAsync(async (req, res, next) => {
+router.delete('/:id', isLoggedIn, catchAsync(async (req, res, next) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     req.flash('success', 'Successfully deleted campground!')
