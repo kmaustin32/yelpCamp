@@ -23,11 +23,13 @@ const seedDb = async () => {
         let random1000 = Math.floor(Math.random() * 1000);
         let price = Math.floor(Math.random() * 20) + 10;
         let camp = new Campground({
-            title: `testLocation${i}`,
+            title: `testLocation${i + 1}`,
             image: 'https://source.unsplash.com/collection/483251',
             price: price,
             description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-            location: `${cities[random1000].city}, ${cities[random1000].state}`
+            location: `${cities[random1000].city}, ${cities[random1000].state}`,
+            //Taken from a user in database, change on different machine
+            author: '611e1db999f1190d9d845009'
         })
         await camp.save();
     }
