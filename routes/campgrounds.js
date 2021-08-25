@@ -43,18 +43,32 @@ router.get('/:id', catchAsync(async (req, res, next) => {
     const camp = await Campground.findById(req.params.id).populate('reviews').populate('author');
     if(!camp) {
         req.flash('error', 'Campground not found')
-        res.redirect('/campgrounds')
+        return res.redirect('/campgrounds')
     }
     res.render('campgrounds/show', {camp})
 }))
 
 router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res, next) => {
-    const camp = await Campground.findById(req.params.id);
+    const { id } = req.params;
+    const camp = await Campground.findById(id);
+    if(!camp) {
+        req.flash('error', 'Campground not found');
+        return res.redirect('/campgrounds');
+    }
+    if(!camp.author.equals(req.user._id)) {
+        req.flash('error', 'You do not have permission to do that');
+        return res.redirect(`/campgrounds/${id}`)
+    }
     res.render('campgrounds/edit', {camp})
 }))
 
 router.put('/:id', isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
     const { id } = req.params;
+    const currentCamp = await Campground.findById(id);
+    if(!currentCamp.author.equals(req.user._id)) {
+        req.flash('error', 'You do not have permission to do that');
+        return res.redirect(`/campgrounds/${id}`)
+    }
     //This is campground because name on the form are campground[value]
     const camp = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {new: true});
     req.flash('success', 'Successfully updated campground!')
@@ -63,6 +77,11 @@ router.put('/:id', isLoggedIn, validateCampground, catchAsync(async (req, res, n
 
 router.delete('/:id', isLoggedIn, catchAsync(async (req, res, next) => {
     const { id } = req.params;
+    const currentCamp = await Campground.findById(id);
+    if(!currentCamp.author.equals(req.user._id)) {
+        req.flash('error', 'You do not have permission to do that');
+        return res.redirect(`/campgrounds/${id}`)
+    }
     await Campground.findByIdAndDelete(id);
     req.flash('success', 'Successfully deleted campground!')
     res.redirect('/campgrounds')
