@@ -15,6 +15,7 @@ router.route('/login')
 
 router.get('/logout', users.logout);
 
+
 //Old Routes
 // router.get('/register', users.renderRegister);
 // router.post('/register', catchAsync(users.register));
