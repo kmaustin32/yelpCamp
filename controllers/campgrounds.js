@@ -30,6 +30,7 @@ module.exports.showCampground = async (req, res, next) => {
         req.flash('error', 'Campground not found')
         return res.redirect('/campgrounds')
     }
+    req.session.returnTo = req.originalUrl;
     res.render('campgrounds/show', {camp})
 };
 
