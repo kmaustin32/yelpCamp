@@ -32,6 +32,15 @@
                 <textarea class="form-control" type="text" name="campground[description]" id="description" required><%= camp.description %></textarea>
                 <div class="valid-feedback">Looks good!</div>
             </div>
+            <div class="mb-3">
+                <% camp.images.forEach(function(img, i){ %> 
+                    <img src="<%= img.url  %>" class="img-thumbnail" alt="">
+                    <div class="form-check-inline">
+                        <input type="checkbox" name="deleteImages[]" id="image-<%= i %>" value="<%= img.filename %>">
+                    </div>
+                    <label for="image-<%= i %>">Delete Image?</label>
+                <% }) %> 
+            </div>
             <div class="mb-2 d-grid gap-2">
                 <button style="color: white;" class="btn btn-info" type="submit">Update</button>
             </div>
