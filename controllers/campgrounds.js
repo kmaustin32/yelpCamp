@@ -16,6 +16,7 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.createCampground = async (req, res, next) => {
     // if (!req.body.campground) throw new ExpressError("Invalid Campground Data", "400");
+
     const geoData = await geocoder.forwardGeocode({
         query: req.body.campground.location, 
         limit: 1
@@ -23,6 +24,7 @@ module.exports.createCampground = async (req, res, next) => {
     
     const camp = new Campground(req.body.campground);
     camp.geometry = geoData.body.features[0].geometry;
+
     camp.images = req.files.map(f => ({url: f.path, filename: f.filename}));
     camp.author = req.user._id;
     await camp.save();
@@ -62,11 +64,13 @@ module.exports.updateCampground = async (req, res, next) => {
     //This is campground because name on the form are campground[value]
     const camp = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {new: true});
 
+
     const geoData = await geocoder.forwardGeocode({
         query: camp.location, 
         limit: 1
     }).send()
     camp.geometry = geoData.body.features[0].geometry;
+
     const imgs = req.files.map(f => ({url: f.path, filename: f.filename}));
     camp.images.push(...imgs);
     camp.save()
