@@ -10,7 +10,11 @@
     <div class="card mb-3">
         <div class="row">
             <div class="col-4">
-                <img src="<%= camp.images[0].url %>" alt="" class="img-fluid img-thumbnail" style="height: 350px; width: 350px">
+                <% if(camp.images.length) { %> 
+                    <img src="<%= camp.images[0].url %>" alt="" class="img-fluid img-thumbnail" style="height: 350px; width: 350px">
+                <% } else { %> 
+                    <img src="https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg" alt="" class="img-fluid img-thumbnail" style="height: 350px; width: 350px">
+                <% } %> 
             </div>
             <div class="col-8">
                 <div class="card-body">

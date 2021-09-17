@@ -8,6 +8,11 @@
             <div id='map' style='width: 400px; height: 300px;'></div>
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
+                    <% if(!camp.images.length) { %> 
+                        <div>
+                            <img src="https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg" alt="">
+                        </div>
+                    <% } else { %> 
                     <% camp.images.forEach((img, i) => { %> 
                     <div class="carousel-item <%= i === 0 ? 'active' : '' %> ">
                         <img src="<%= img.url %>" class="d-block w-100" alt="">
@@ -25,6 +30,7 @@
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
+                <% } %> 
                 <% } %> 
             </div>
 
