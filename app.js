@@ -12,6 +12,8 @@ const ejsMate = require('ejs-mate');
 const ExpressError = require('./utils/ExpressErrors');
 const session = require('express-session');
 const flash = require('connect-flash');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
 //Required Routes
 const campgroundRoutes = require('./routes/campgrounds')
 const reviewRoutes = require('./routes/reviews')
@@ -22,6 +24,7 @@ const morgan = require('morgan');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user')
+
 
 mongoose.connect('mongodb://localhost:/yelpCamp', {
     useNewUrlParser: true,
@@ -42,11 +45,14 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(morgan('tiny'));
 
+app.use(mongoSanitize());
+
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const sessionConfig = {
+    name: '_sessiosu',
     secret: 'thisshouldbeabettersecret',
     resave: false,
     saveUninitialized: true,
@@ -59,6 +65,7 @@ const sessionConfig = {
 
 app.use(session(sessionConfig))
 app.use(flash());
+app.use(helmet({contentSecurityPolicy: false}));
 
 app.use(passport.initialize());
 app.use(passport.session());
